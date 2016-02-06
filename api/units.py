@@ -79,7 +79,7 @@ class MapTile(object):
 class Player(object):
     def __init__(self, element):
         if element is not None:
-            self.cash = int(element.get('cash'))
+            self.cash = 100000
             self.guid = element.get('guid')
             self.name = element.get('name')
             self.score = int(element.get('score'))
@@ -137,4 +137,4 @@ class StockOwner(object):
 
     def __str__(self):
         return "Owner {} has {} shares".format(self.owner, self.num_shares)
-		
+        
