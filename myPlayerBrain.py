@@ -62,19 +62,26 @@ class MyPlayerBrain(object):
     def QueryTileAndPurchase(self, map, me, hotelChains, players):
         inactive = next((hotel for hotel in hotelChains if not hotel.is_active), None)
         turn = PlayerTurn(tile=random_element(me.tiles), created_hotel=inactive, merge_survivor=inactive)
+        done = 0
+        for x in range(0, map.height):
+            for y in range(0, map.width):
+                mapTile = map.tiles[x][y]
+                if mapTile.type == MapTile.SINGLE:
+                    for thisTile in me.tiles:
+                        xx = (x - thisTile.x)
+                        yy = (y - thisTile.y)
+                        if xx * xx + yy * yy == 1:
+                            turn.Tile = thisTile
+                           # turn.Buy.append(lib.HotelStock(hotelChains[0], 3))
+                            #done = 1
+                            break 
+        if done == 0:  
+            turn.Buy.append(lib.HotelStock(random_element(hotelChains), rand.randint(1, 3)))
+            turn.Buy.append(lib.HotelStock(random_element(hotelChains), rand.randint(1, 3)))
         
-        for mapTile in map.tiles:
-            if mapTile.Type == MapTile.SINGLE:
-                for thisTile in me.tiles:
-                    xx = (mapTile.x - thisTile.x)
-                    yy = (mapTile.y - thisTile.y)
-                    if xx * xx + yy * yy == 1:
-                        turn.Tile = thisTile
-                        break 
-            
-        turn.Buy.append(lib.HotelStock(random_element(hotelChains), rand.randint(1, 3)))
-        turn.Buy.append(lib.HotelStock(random_element(hotelChains), rand.randint(1, 3)))
-        print("at round #" + self.cnt + ", Buy is: " + turn.Buy + ".\n")
+        #turn.Buy.append(lib.HotelStock(random_element(hotelChains), rand.randint(1, 3)))
+        
+        #print("at round #" + self.cnt + ", Buy is: " + turn.Buy + ".\n")
         if rand.randint(0, 20) is not 1:
             return turn
         temp_rand = rand.randint(0, 2)
